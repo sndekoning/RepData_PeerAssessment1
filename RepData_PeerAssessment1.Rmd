@@ -1,0 +1,52 @@
+---
+title: "Reproducible Reasearch Peer Assessment 1"
+author: "SN de Koning"
+date: "4 februari 2016"
+output: html_document
+---
+
+This is a report of the Coursera course Reproducible Research first assignment. 
+This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
+
+
+### Loading and preprocessing the data
+
+
+First to read the data into R.
+```{r} 
+activity <- read.csv("activity.csv", 
+                     na.strings = "NA", 
+                     colClasses = c("integer", "Date", "integer"))
+```
+
+
+### What is mean total number of steps taken per day?
+
+
+
+Then we want to know what the mean total number of steps taken per day is, while ignoring the missing values.
+
+```{r, fig.width=10, fig.height=10, fig.align='center'}
+steps_by_day <- aggregate(activity$steps, by = list(activity$date), FUN = sum, na.rm = TRUE)
+names(steps_by_day) <- c("date", "steps")
+
+sbd_oktober <- subset(steps_by_day, steps_by_day$date <= "2012-10-30") 
+sbd_november <- subset(steps_by_day, steps_by_day$date > "2012-10-30")
+
+par(mfrow = c(2,1))
+barplot(sbd_oktober$steps, names.arg = c(1:length(sbd_oktober$date)), xlab = "Day of the month",
+        ylab = "Total steps per day", main = "Oktober", col = "red")
+barplot(sbd_november$steps, names.arg = c(1:length(sbd_november$date)), xlab = "Day of the month",
+        ylab = "Total steps per day", main = "November", col = "magenta")
+```
+
+The mean and the median of the total numbers steps taken per day were caclulated with the following code.
+
+```{r}
+mean(steps_by_day$steps)
+median(steps_by_day$steps)
+```
+
+### What is the average daily activity pattern?
+
+
